@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+
 public class MainActivity extends FlutterActivity {
 
     private static final String CHANNEL = "my_channel"; // Change to your channel name
@@ -111,5 +112,7 @@ public class MainActivity extends FlutterActivity {
             }
         }
     }
+
+
 
 }
