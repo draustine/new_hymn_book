@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 
 String authorisedUrl = 'https://www.dropbox.com/scl/fi/iphzf0svgeaez8rrq9pv4/Authorised-Users.txt?rlkey=8u7moxfuovdiafp7qsrdgzes8&dl=1 ';
-String expirationDate = "2023-11-30"; // Set your app's expiration date here
+String expirationDate = "2023-12-31"; // Set your app's expiration date here
 late bool isActivated;
 late bool isValid;
 String activationStatusFile = 'activation_status';
