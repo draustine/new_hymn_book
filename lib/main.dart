@@ -113,6 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
         final Map<String, List<String>> retrievedData  = await retrieveMap(localHymnsKey);
         setState(() {
           jsonData = copyMap(retrievedData);
+          hymnCount = jsonData.length;
         });
       } catch (e){
         showToast(msg: 'There is no List in memory', duration: 3);
