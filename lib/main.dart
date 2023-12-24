@@ -51,9 +51,8 @@ class _MyHomePageState extends State<MyHomePage> {
     bool isInternetAccessible = await checkInternetConnection();
     setState(() {
       isThereInternetAccess = isInternetAccessible;
-      getAuthorisationParameters();
     });
-
+    await getAuthorisationParameters();
   }
 
 
@@ -126,7 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
 
-  void getAuthorisationParameters() async {
+  Future<void> getAuthorisationParameters() async {
     //Get activation status from memory
     var check = await getRecordFromMemory(activationStatusFile);
     setState(() {

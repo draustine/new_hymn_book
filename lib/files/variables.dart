@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 
 String hymnJsonUrl = "https://www.dropbox.com/scl/fi/r5e1n45l0oy0qumy9qx5i/Composed_Hymns.json?rlkey=rbhbdzacei5yowqvi014tnjud&dl=1";
 String authorisedUrl = 'https://www.dropbox.com/scl/fi/iphzf0svgeaez8rrq9pv4/Authorised-Users.txt?rlkey=8u7moxfuovdiafp7qsrdgzes8&dl=1 ';
-String expirationDate = "2024-01-31"; // Set your app's expiration date here
+String expirationDate = "2023-01-31"; // Set your app's expiration date here
 String localHymnsJson = "";
 String localHymnsKey = "localHymnsString";
 late bool isActivated;
