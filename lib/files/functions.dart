@@ -231,14 +231,6 @@ Future<void> downloadAndSaveFile({required String url, required String fileName,
 }
 
 
-Future<Map<String, List<String>>> loadJsonFromSharedPreferences(String key) async {
-  Map<String, dynamic> thisData;
-  final String? localData = prefs.getString(key);
-  thisData = jsonDecode(localData!) as Map<String, dynamic>;
-  return convertMap(thisData);
-}
-
-
 Future<void> saveMap(Map<String, dynamic> myMap, String mapName) async {
   prefs.setString(mapName, mapToString(myMap)); // Save the map as a string
 }
@@ -250,30 +242,11 @@ String mapToString(Map<String, dynamic> map) {
 }
 
 
-Map<String, List<String>> convertNestedMap(Map<String, dynamic> nestedMap) {
-  final convertedMap = <String, List<String>>{};
-
-  nestedMap.forEach((key, value) {
-    if (value is Map<String, dynamic>) {
-      convertedMap[key] = value.values.cast<String>().toList();
-    } else if (value is List<String>) {
-      convertedMap[key] = value;
-    } else {
-      // Handle unexpected value types (e.g., log a warning or throw an error)
-      log('Warning: Unexpected value type encountered: $value');
-    }
-  });
-
-  return convertedMap;
-}
-
-
 Map<String, List<String>> convertMap (Map<String, dynamic> myMap){
   Map<String, List<String>> convertedMap =
     myMap.map((key, value) => MapEntry(key, value.cast<String>().toList()));
   return convertedMap;
 }
-
 
 
 Future<Map<String, List<String>>> retrieveMap(String key) async {
@@ -290,22 +263,6 @@ Future<Map<String, List<String>>> retrieveMap(String key) async {
   }
 }
 
-Map<String, dynamic> stringToMap(String data) {
-  List<String> keyValuePairs = data.split(',');
-  Map<String, dynamic> resultMap = {};
-  for (var pair in keyValuePairs) {
-    List<String> keyValue = pair.split('=');
-    resultMap[keyValue[0]] = keyValue[1];
-  }
-  return resultMap;
-}
-
-
-void printMap(Map<String, String> myMap){
-  for (final key in myMap.keys){
-    log('$key is : ${myMap[key]}');
-  }
-}
 
 
 Future<void> commonShowToast({required String msg, required int duration, required context}) async {

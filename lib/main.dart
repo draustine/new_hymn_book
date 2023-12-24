@@ -59,6 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
   Future<void> requestPermissions() async {
+    initialiseSharedPreferences();
     Map<Permission, PermissionStatus> statuses = {};
     // Request each permission one by one and await the result of each request
     statuses[Permission.contacts] = await Permission.contacts.request();
@@ -68,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (statuses[Permission.contacts] == PermissionStatus.granted &&
         statuses[Permission.location] == PermissionStatus.granted) {
       // Permissions are granted, proceed with your operations that require these permissions
-      initialiseSharedPreferences();
+
     } else {
       exit(0);
     }

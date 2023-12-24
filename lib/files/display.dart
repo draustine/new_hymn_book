@@ -20,7 +20,7 @@ class HomePageState extends State<HomePage> {
 
   int count = 0;
   String validityText = '';
-  Widget screenToShow = HomePage();
+  Widget screenToShow = const HomePage();
   String buttonText = 'BACK';
   dynamic result = [];
 
@@ -149,7 +149,7 @@ class HomePageState extends State<HomePage> {
       try{
         final Map<String, List<String>> retrievedData  = await retrieveMap(localHymnsKey);
         setState(() {
-          jsonData = retrievedData;
+          jsonData = Map.from(retrievedData);
         });
       } catch (e){
         showToast(msg: 'There is no List in memory', duration: 3);
