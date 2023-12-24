@@ -275,6 +275,31 @@ Future<Map<String, List<String>>> retrieveMap(String key) async {
   return {}; // Return an empty map if no data is found
 }
 
+void printList(List<String> list) {
+  for (final String item in list) {
+    log(item);
+  }
+}
+
+void printMap(Map<String, List<String>> myMap) {
+  for (final key in myMap.keys) {
+    printList(myMap[key]!);
+  }
+}
+
+
+Map<String, List<String>> copyMap(Map<String, List<String>> originalMap) {
+  // Create a new map with the same keys as the original map
+  Map<String, List<String>> copiedMap = Map.from(originalMap);
+
+  // Iterate through the entries of the original map
+  originalMap.forEach((key, value) {
+    // Create a new list and copy the contents of the original list
+    copiedMap[key] = List.from(value);
+  });
+
+  return copiedMap;
+}
 
 
 Future<void> commonShowToast({required String msg, required int duration, required context}) async {

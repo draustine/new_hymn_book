@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
-
+import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import '/files/display.dart';
@@ -43,7 +43,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   bool isLoading = true;
 
-  void initialiseSharedPreferences() async {
+  Future<void> initialiseSharedPreferences() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     setState(() {
       prefs = _prefs;
@@ -59,7 +59,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
   Future<void> requestPermissions() async {
-    initialiseSharedPreferences();
+    await initialiseSharedPreferences();
+    await fetchHymnsJsonFile();
     Map<Permission, PermissionStatus> statuses = {};
     // Request each permission one by one and await the result of each request
     statuses[Permission.contacts] = await Permission.contacts.request();
@@ -87,6 +88,42 @@ class _MyHomePageState extends State<MyHomePage> {
       body: HomePage(),
     );
   }
+
+
+  Future<void> fetchHymnsJsonFile() async {
+    bool internetAvailable = await checkInternetConnection();
+    if(internetAvailable){
+      await commonShowToast(msg: 'Internet access is available', duration: 3, context: context);
+      final response = await http.get(Uri.parse(hymnJsonUrl));
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final thisJsonData = jsonDecode(response.body) as Map<String, dynamic>;
+        setState(() {
+          jsonData = convertMap(thisJsonData);
+          hymnCount = jsonData.length;
+        });
+        // Save the JSON data to shared_preferences
+        await prefs.setString(localHymnsKey, jsonEncode(convertMap(thisJsonData)));
+      } else {
+        throw Exception('Failed to download JSON file');
+      }
+    } else {
+      await commonShowToast(msg: 'No Internet access!!!', duration: 3, context: context);
+      try{
+        final Map<String, List<String>> retrievedData  = await retrieveMap(localHymnsKey);
+        setState(() {
+          jsonData = copyMap(retrievedData);
+        });
+      } catch (e){
+        showToast(msg: 'There is no List in memory', duration: 3);
+        log(e.toString());
+      }
+    }
+
+  }
+
+
+
 
   void getAuthorisationParameters() async {
     //Get activation status from memory

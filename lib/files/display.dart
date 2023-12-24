@@ -29,8 +29,6 @@ class HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     // Start the animation
-    //loadJsonData();
-    fetchHymnsJsonFile();
     Future.delayed(const Duration(seconds: 2), () {
       setState(() {
         opacity = 1.0; // Change opacity to 1 to fade in the image
@@ -124,56 +122,6 @@ class HomePageState extends State<HomePage> {
       },
     );
   }
-
-
-  Future<void> fetchHymnsJsonFile() async {
-    bool internetAvailable = await checkInternetConnection();
-    if(internetAvailable){
-      await commonShowToast(msg: 'Internet access is available', duration: 3, context: context);
-      final response = await http.get(Uri.parse(hymnJsonUrl));
-      if (response.statusCode == 200) {
-        // Parse the JSON response
-        final thisJsonData = jsonDecode(response.body) as Map<String, dynamic>;
-        setState(() {
-          jsonData = convertMap(thisJsonData);
-          hymnCount = jsonData.length;
-        });
-        // Save the JSON data to shared_preferences
-        await prefs.setString(localHymnsKey, jsonEncode(convertMap(thisJsonData)));
-      } else {
-        throw Exception('Failed to download JSON file');
-      }
-    } else {
-      await commonShowToast(msg: 'No Internet access!!!', duration: 3, context: context);
-      try{
-        final Map<String, List<String>> retrievedData  = await retrieveMap(localHymnsKey);
-        setState(() {
-          jsonData = Map.from(retrievedData);
-        });
-      } catch (e){
-        showToast(msg: 'There is no List in memory', duration: 3);
-        log(e.toString());
-      }
-    }
-
-    Map<String, List<String>> testJson = await retrieveMap(localHymnsKey);
-    printMap(testJson);
-
-  }
-
-  void printList(List<String> list) {
-    for (final String item in list) {
-      log(item);
-    }
-  }
-
-  void printMap(Map<String, List<String>> myMap) {
-    for (final key in myMap.keys) {
-      printList(myMap[key]!);
-    }
-  }
-
-
 
 
 
