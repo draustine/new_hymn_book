@@ -142,8 +142,6 @@ class HomePageState extends State<HomePage> {
         await prefs.setString(localHymnsKey, jsonEncode(convertMap(thisJsonData)));
       } else {
         throw Exception('Failed to download JSON file');
-
-
       }
     } else {
       await commonShowToast(msg: 'No Internet access!!!', duration: 3, context: context);
@@ -158,7 +156,25 @@ class HomePageState extends State<HomePage> {
       }
     }
 
+    Map<String, List<String>> testJson = await retrieveMap(localHymnsKey);
+    printMap(testJson);
+
   }
+
+  void printList(List<String> list) {
+    for (final String item in list) {
+      log(item);
+    }
+  }
+
+  void printMap(Map<String, List<String>> myMap) {
+    for (final key in myMap.keys) {
+      printList(myMap[key]!);
+    }
+  }
+
+
+
 
 
   Future<void> loadJsonData() async {

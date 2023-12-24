@@ -250,6 +250,7 @@ Map<String, List<String>> convertMap (Map<String, dynamic> myMap){
 
 
 Future<Map<String, List<String>>> retrieveMap(String key) async {
+  prefs = await SharedPreferences.getInstance();
   final encodedData = prefs.getString(key);
 
   if (encodedData != null) {
