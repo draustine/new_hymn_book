@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -138,7 +139,7 @@ class HomePageState extends State<HomePage> {
           hymnCount = jsonData.length;
         });
         // Save the JSON data to shared_preferences
-        await prefs.setString(localHymnsKey, jsonEncode(jsonData));
+        await prefs.setString(localHymnsKey, jsonEncode(convertMap(thisJsonData)));
       } else {
         throw Exception('Failed to download JSON file');
 
@@ -153,6 +154,7 @@ class HomePageState extends State<HomePage> {
         });
       } catch (e){
         showToast(msg: 'There is no List in memory', duration: 3);
+        log(e.toString());
       }
     }
 
