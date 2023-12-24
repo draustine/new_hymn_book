@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'expandable_list_view.dart';
+import 'functions.dart';
 import 'variables.dart';
 import 'other_pages.dart';
+import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -26,13 +28,16 @@ class HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     // Start the animation
-    loadJsonData();
+    //loadJsonData();
+    fetchHymnsJsonFile();
     Future.delayed(const Duration(seconds: 2), () {
       setState(() {
         opacity = 1.0; // Change opacity to 1 to fade in the image
       });
     });
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -119,6 +124,41 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+
+  Future<void> fetchHymnsJsonFile() async {
+    bool internetAvailable = await checkInternetConnection();
+    if(internetAvailable){
+      await commonShowToast(msg: 'Internet access is available', duration: 3, context: context);
+      final response = await http.get(Uri.parse(hymnJsonUrl));
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final thisJsonData = jsonDecode(response.body) as Map<String, dynamic>;
+        setState(() {
+          jsonData = convertMap(thisJsonData);
+          hymnCount = jsonData.length;
+        });
+        // Save the JSON data to shared_preferences
+        await prefs.setString(localHymnsKey, jsonEncode(jsonData));
+      } else {
+        throw Exception('Failed to download JSON file');
+
+
+      }
+    } else {
+      await commonShowToast(msg: 'No Internet access!!!', duration: 3, context: context);
+      try{
+        final Map<String, List<String>> retrievedData  = await retrieveMap(localHymnsKey);
+        setState(() {
+          jsonData = retrievedData;
+        });
+      } catch (e){
+        showToast(msg: 'There is no List in memory', duration: 3);
+      }
+    }
+
+  }
+
+
   Future<void> loadJsonData() async {
     final String jsonContent =
     await rootBundle.loadString('assets/Composed_Hymns.json');
@@ -130,9 +170,6 @@ class HomePageState extends State<HomePage> {
         return MapEntry(key, List<String>.from(value));
       });
       hymnCount = jsonData.length;
-      // for(final String key in jsonData.keys){
-      //   print(jsonData[key]);
-      // }
     });
   }
 

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:google_fonts/google_fonts.dart';
@@ -7,7 +8,7 @@ import 'package:ntp/ntp.dart';
 import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'files/functions.dart';
 import 'files/variables.dart';
 
 void main() {
@@ -33,9 +34,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({
-    super.key,
-  });
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -48,9 +47,16 @@ class _MyHomePageState extends State<MyHomePage> {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     setState(() {
       prefs = _prefs;
+     });
+    bool isInternetAccessible = await checkInternetConnection();
+    setState(() {
+      isThereInternetAccess = isInternetAccessible;
       getAuthorisationParameters();
     });
+
   }
+
+
 
   Future<void> requestPermissions() async {
     Map<Permission, PermissionStatus> statuses = {};

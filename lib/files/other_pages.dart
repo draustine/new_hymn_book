@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'expandable_list_view.dart';
+import 'functions.dart';
 import 'variables.dart';
 import '../main.dart';
 
