@@ -254,13 +254,24 @@ Future<Map<String, List<String>>> retrieveMap(String key) async {
 
   if (encodedData != null) {
     // Decode the JSON string back into a map:
-    final decodedData = jsonDecode(encodedData) as Map<String, dynamic>;
+    final decodedData = jsonDecode(encodedData);
 
-    // Convert the values to lists of strings:
-    return decodedData.map((key, value) => MapEntry(key, value.cast<String>().toList()));
-  } else {
-    return {}; // Return an empty map if no data is found
+    // Check if the decoded data is a map:
+    if (decodedData is Map<String, dynamic>) {
+      // Return the decoded map:
+      return decodedData.map((key, value) {
+        // Check if the value is a List<String>:
+        if (value is List<dynamic>) {
+          return MapEntry(key, value.cast<String>().toList());
+        } else {
+          // Handle other cases if needed.
+          return MapEntry(key, <String>[]);
+        }
+      });
+    }
   }
+
+  return {}; // Return an empty map if no data is found
 }
 
 
