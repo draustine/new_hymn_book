@@ -52,27 +52,26 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       isThereInternetAccess = isInternetAccessible;
     });
-    await getAuthorisationParameters();
+
   }
 
 
 
   Future<void> requestPermissions() async {
     await initialiseSharedPreferences();
-    await fetchHymnsJsonFile();
     Map<Permission, PermissionStatus> statuses = {};
     // Request each permission one by one and await the result of each request
     statuses[Permission.contacts] = await Permission.contacts.request();
     statuses[Permission.location] = await Permission.location.request();
-
     // Check if permissions are granted before continuing with your operations
     if (statuses[Permission.contacts] == PermissionStatus.granted &&
         statuses[Permission.location] == PermissionStatus.granted) {
       // Permissions are granted, proceed with your operations that require these permissions
-
     } else {
       exit(0);
     }
+    await getAuthorisationParameters();
+    await fetchHymnsJsonFile();
   }
 
   @override
@@ -121,8 +120,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
   }
-
-
 
 
   Future<void> getAuthorisationParameters() async {
